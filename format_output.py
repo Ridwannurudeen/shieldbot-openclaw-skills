@@ -181,15 +181,27 @@ def format_threats(data):
 
     for t in threats:
         ttype = t.get("type", "unknown")
-        addr = _trunc(t.get("address", ""))
         chain = t.get("chain_id", "?")
-        risk = t.get("risk_score", "?")
-        level = t.get("risk_level", "?")
-        arch = t.get("archetype", "")
-        line = f"[{level}] {ttype} — {addr} (chain {chain}, risk {risk})"
-        if arch:
-            line += f" [{arch}]"
-        lines.append(line)
+
+        if ttype.startswith("mempool_"):
+            severity = t.get("severity", "?")
+            desc = t.get("description", "")
+            attacker = _trunc(t.get("attacker_addr", ""))
+            line = f"[{severity}] {ttype} — chain {chain}"
+            if attacker and attacker != "N/A":
+                line += f" | attacker: {attacker}"
+            lines.append(line)
+            if desc:
+                lines.append(f"  {desc}")
+        else:
+            addr = _trunc(t.get("address", ""))
+            risk = t.get("risk_score", "?")
+            level = t.get("risk_level", "?")
+            arch = t.get("archetype", "")
+            line = f"[{level}] {ttype} — {addr} (chain {chain}, risk {risk})"
+            if arch:
+                line += f" [{arch}]"
+            lines.append(line)
 
     return "\n".join(lines)
 
