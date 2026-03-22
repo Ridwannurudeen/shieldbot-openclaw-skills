@@ -1,7 +1,8 @@
 ---
 name: shieldbot-security
 description: BNB Chain security scanner — scan contracts, simulate transactions, detect phishing, investigate deployers, track scam campaigns, and audit wallet approvals via ShieldBot's API.
-metadata: { "openclaw": { "emoji": "🛡️", "requires": { "bins": ["python"] }, "os": ["win32", "linux", "darwin"] } }
+homepage: https://github.com/Ridwannurudeen/shieldbot-openclaw-skills
+metadata: { "openclaw": { "emoji": "🛡️", "homepage": "https://shieldbotsecurity.online", "requires": { "bins": ["python"] }, "os": ["win32", "linux", "darwin"] } }
 ---
 
 # ShieldBot Security Skill
@@ -121,6 +122,29 @@ python "{baseDir}/shieldbot_client.py" --action ask --message "USER_QUESTION" --
 - 41-60: MEDIUM RISK — Proceed with caution
 - 61-80: HIGH RISK — Significant red flags, recommend avoiding
 - 81-100: CRITICAL — Almost certainly a scam, do NOT interact
+
+## Security & Privacy
+
+This skill sends data to ShieldBot's public API at `api.shieldbotsecurity.online`. Here is exactly what is transmitted and why:
+
+- **Contract addresses** — sent to `/api/scan` to check for honeypots, hidden mints, and rug pull patterns. Required for the scan to work.
+- **Transaction parameters** (to, from, value, data) — sent to `/api/firewall` to simulate transactions before signing. Required to detect dangerous transactions.
+- **Wallet addresses** — sent to `/api/rescue/{wallet}` to scan token approvals. Required to find risky allowances.
+- **URLs** — sent to `/api/phishing` to check against phishing databases. Required for URL safety checks.
+- **Free-text questions** — sent to `/api/agent/chat` for AI security advice. Only sent when the user explicitly asks a question.
+
+No credentials, private keys, seed phrases, or personal data are ever collected or transmitted. All endpoints are public and require no API keys. The API is rate-limited to 30 requests/minute per IP.
+
+Source code: https://github.com/Ridwannurudeen/shieldbot-openclaw-skills
+Product: https://shieldbotsecurity.online
+
+## Dependencies
+
+Install the `requests` library before first use:
+
+```bash
+pip install -r "{baseDir}/requirements.txt"
+```
 
 ## Environment
 
